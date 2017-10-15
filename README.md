@@ -14,5 +14,11 @@ preserved.
 ## Basic Usage
 
 ```elm
-String.Normalize.filename "Crazy / User Input:©someuser.jpg"
+String.Normalize.filename "Crazy / User Input:soɱeṳser.jpg"
+```
+
+Will return:
+
+```elm
+"crazy-user-input-someuser.jpg"
 ```
