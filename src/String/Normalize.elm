@@ -1,18 +1,14 @@
-module String.Normalize
-    exposing
-        ( url
-        , slug
-        , filename
-        , path
-        , removeDiacritics
-        )
+module String.Normalize exposing
+    ( url, slug, filename, path
+    , removeDiacritics
+    )
 
 {-| Normalize string in different formats
 
 
 # Normalize formats
 
-@docs url, slug, slug, filename, path
+@docs url, slug, filename, path
 
 
 # Utilities
@@ -21,10 +17,10 @@ module String.Normalize
 
 -}
 
-import String.Normalize.Diacritics as Diacritics
-import Dict
 import Char
+import Dict
 import Set exposing (Set)
+import String.Normalize.Diacritics as Diacritics
 
 
 {-| `removeDiacritics` removes diactritics, it will expand
@@ -32,8 +28,11 @@ known ligatures, thus changing the string glyph length.
 All non latin characters are untouched.
 
     removeDiacritics "La liberté commence où l'ignorance finit."
-      --> "La liberte commence ou l'ignorance finit."
+
+
+    --> "La liberte commence ou l'ignorance finit."
     removeDiacritics "é()/& abc" --> "e()/& abc"
+
     removeDiacritics "こんにちは" --> "こんにちは"
 
 -}
@@ -46,9 +45,9 @@ removeDiacritics str =
                     result ++ candidate
 
                 Nothing ->
-                    result ++ (String.fromChar c)
+                    result ++ String.fromChar c
     in
-        String.foldl replace "" str
+    String.foldl replace "" str
 
 
 {-| `slug` will remove all diacritics and punctuation, lowercase the string,
@@ -79,8 +78,9 @@ url str =
 instead of hypens, it will also preserve the file extension. The file
 extension will be lowercased.
 
-    filename "J'aime les fruits/et les amours .MP3" -->
-      "j_aime_les_fruits_et_les_amours.mp3"
+    filename "J'aime les fruits/et les amours .MP3"
+        -->
+        "j_aime_les_fruits_et_les_amours.mp3"
 
 -}
 filename : String -> String
@@ -90,8 +90,9 @@ filename str =
 
 {-| `path` is similar to `filename` but will preserve slash.
 
-    path "J'aime les fruits/et les amours .MP3" -->
-      "j_aime_les_fruits/et_les_amours.mp3"
+    path "J'aime les fruits/et les amours .MP3"
+        -->
+        "j_aime_les_fruits/et_les_amours.mp3"
 
 -}
 path : String -> String
@@ -106,34 +107,37 @@ cleanupPath keepChars str =
             let
                 name_ =
                     if found then
-                        (String.fromChar c) ++ name
+                        String.fromChar c ++ name
+
                     else
                         name
 
                 ext_ =
                     if not found then
-                        (String.fromChar c) ++ ext
+                        String.fromChar c ++ ext
+
                     else
                         ext
 
                 found_ =
                     if c == '.' then
                         True
+
                     else
                         found
             in
-                ( name_, ext_, found_ )
+            ( name_, ext_, found_ )
 
-        ( fname, ext, _ ) =
+        ( fname, rawExt, _ ) =
             String.foldr separate ( "", "", False ) str
 
         fname_ =
             cleanup keepChars '_' fname
 
-        ext_ =
-            String.toLower ext
+        lowExt =
+            String.toLower rawExt
     in
-        fname_ ++ ext_
+    fname_ ++ lowExt
 
 
 cleanup : Set Char -> Char -> String -> String
@@ -147,26 +151,28 @@ cleanup keepChars separator str =
                 newChar =
                     if Set.member c keepChars then
                         ( c, True, True )
+
                     else if code > 0x7F then
                         ( c, False, False )
+
                     else if
-                        (code
+                        code
                             > 0x7A
                             || (code > 0x5A && code < 0x61)
                             || (code > 0x39 && code < 0x41)
                             || (code < 0x30)
-                        )
                     then
                         ( '-', True, False )
+
                     else
                         ( c, False, False )
             in
-                newChar
+            newChar
 
-        replace c ( result, isPreviousBoundary, isPreviousKeep ) =
+        replace c ( resultAcc, isPreviousBoundary, isPreviousKeep ) =
             case Dict.get c Diacritics.lookupTable of
                 Just candidate ->
-                    ( result ++ (String.toLower candidate), False, False )
+                    ( resultAcc ++ String.toLower candidate, False, False )
 
                 Nothing ->
                     let
@@ -178,21 +184,23 @@ cleanup keepChars separator str =
                                 |> String.fromChar
                                 |> String.toLower
                     in
-                        if isBoundary && isPreviousBoundary && isPreviousKeep then
-                            ( result
-                            , isPreviousBoundary
-                            , isPreviousKeep
-                            )
-                        else if isBoundary && isPreviousBoundary then
-                            ( (String.dropRight 1 result) ++ replacement_
-                            , isBoundary
-                            , isKeep
-                            )
-                        else
-                            ( result ++ replacement_
-                            , isBoundary
-                            , isKeep
-                            )
+                    if isBoundary && isPreviousBoundary && isPreviousKeep then
+                        ( resultAcc
+                        , isPreviousBoundary
+                        , isPreviousKeep
+                        )
+
+                    else if isBoundary && isPreviousBoundary then
+                        ( String.dropRight 1 resultAcc ++ replacement_
+                        , isBoundary
+                        , isKeep
+                        )
+
+                    else
+                        ( resultAcc ++ replacement_
+                        , isBoundary
+                        , isKeep
+                        )
 
         ( result, _, _ ) =
             String.foldl replace ( "", True, False ) str
@@ -200,13 +208,15 @@ cleanup keepChars separator str =
         result_ =
             if String.startsWith "-" result then
                 String.dropLeft 1 result
+
             else
                 result
 
         result__ =
             if String.endsWith "-" result_ then
                 String.dropRight 1 result_
+
             else
                 result_
     in
-        result__
+    result__
