@@ -3,7 +3,7 @@
     "name": "kuon/elm-string-normalize",
     "summary": "String normalization utils",
     "license": "BSD-3-Clause",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "exposed-modules": [
         "String.Normalize"
     ],
