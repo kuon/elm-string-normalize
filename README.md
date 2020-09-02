@@ -1,6 +1,6 @@
 # Elm String Normalize
 
-[![Build Status](https://travis-ci.org/kuon/elm-string-normalize.svg?branch=master)](https://travis-ci.org/kuon/elm-string-normalize)
+![CI](https://github.com/kuon/elm-string-normalize/workflows/CI/badge.svg)
 
 This package provides a few utilities to process user input into search token
 or filenames.
