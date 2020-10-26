@@ -1,3 +1,36 @@
+
+# THIS REPOSITORY HAS MOVED
+
+New URL: https://git.goyman.com/kuon/elm-string-normalize
+
+Why I moved everything out of GitHub:
+
+https://github.com/kuon/WhyILeftGithub/blob/main/README.md
+
+----
+
+
+# THIS REPOSITORY HAS MOVED
+
+New URL: https://git.goyman.com/kuon/elm-string-normalize
+
+Why I moved everything out of GitHub:
+
+https://github.com/kuon/WhyILeftGithub/blob/main/README.md
+
+----
+
+
+# THIS REPOSITORY HAS MOVED
+
+New URL: https://git.goyman.com/kuon/elm-string-normalize
+
+Why I moved everything out of GitHub:
+
+https://github.com/kuon/WhyILeftGithub/blob/main/README.md
+
+----
+
 # Elm String Normalize
 
 ![CI](https://github.com/kuon/elm-string-normalize/workflows/CI/badge.svg)
