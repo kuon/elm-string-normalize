@@ -74,7 +74,7 @@ unicode =
 
 withDiacritics : Fuzz.Fuzzer String
 withDiacritics =
-    Fuzz.oneOf [diacritic, Fuzz.char]
+    Fuzz.oneOf [ diacritic, Fuzz.char ]
         |> Fuzz.list
         |> Fuzz.map String.fromList
 
