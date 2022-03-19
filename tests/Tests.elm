@@ -2,7 +2,10 @@ module Tests exposing (..)
 
 import Test exposing (..)
 import Expect exposing (equal)
+import String.Normalize.Diacritics exposing (lookupTable)
 import String.Normalize exposing (removeDiacritics, slug, url, filename, path)
+import Fuzz
+import Dict
 
 
 removeDiacriticsTests : Test
@@ -32,7 +35,61 @@ removeDiacriticsTests =
             \_ ->
                 removeDiacritics "こんにちは"
                     |> equal "こんにちは"
+        , fuzz Fuzz.string "don't touch ASCII" <|
+            \randomAscii ->
+                removeDiacritics randomAscii
+                    |> equal randomAscii
+        , fuzz onlyDiacritics "always change diacritics" <|
+            \randomDiacritics ->
+                removeDiacritics randomDiacritics
+                    |> (if randomDiacritics == "" then
+                            Expect.equal ""
+
+                        else
+                            Expect.notEqual randomDiacritics
+                       )
+        , fuzz
+            withDiacritics
+            "second pass does nothing"
+          <|
+            \randomString ->
+                let
+                    firstPass =
+                        removeDiacritics randomString
+
+                    secondPass =
+                        removeDiacritics firstPass
+                in
+                Expect.equal firstPass secondPass
         ]
+
+
+unicode : Fuzz.Fuzzer String
+unicode =
+    Fuzz.intRange 0 0x0010FFFF
+        |> Fuzz.map Char.fromCode
+        |> Fuzz.list
+        |> Fuzz.map String.fromList
+
+
+withDiacritics : Fuzz.Fuzzer String
+withDiacritics =
+    Fuzz.oneOf [diacritic, Fuzz.char]
+        |> Fuzz.list
+        |> Fuzz.map String.fromList
+
+
+onlyDiacritics : Fuzz.Fuzzer String
+onlyDiacritics =
+    Fuzz.map String.fromList (Fuzz.list diacritic)
+
+
+diacritic : Fuzz.Fuzzer Char
+diacritic =
+    lookupTable
+        |> Dict.keys
+        |> List.map Fuzz.constant
+        |> Fuzz.oneOf
 
 
 slugTests : Test
