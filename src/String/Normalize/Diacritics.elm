@@ -1,7 +1,7 @@
-module String.Normalize.Diacritics exposing (lookupTable, lookupArray, minCode)
+module String.Normalize.Diacritics exposing (lookupArray, lookupTable, minCode)
 
-import Dict exposing (Dict, insert)
 import Array exposing (Array)
+import Dict exposing (Dict, insert)
 
 
 lookupTable : Dict Char String
@@ -15,14 +15,16 @@ contents are the strings to replace them with.
 lookupArray : Array String
 lookupArray =
     List.range 0 maxCode
-    |> List.map (\i ->
-        case Dict.get (Char.fromCode i) lookupTable of
-            Nothing ->
-                String.fromChar (Char.fromCode i)
+        |> List.map
+            (\i ->
+                case Dict.get (Char.fromCode i) lookupTable of
+                    Nothing ->
+                        String.fromChar (Char.fromCode i)
 
-            Just str ->
-                str)
-    |> Array.fromList
+                    Just str ->
+                        str
+            )
+        |> Array.fromList
 
 
 {-| The highest Unicode code point of all the diacritics.
@@ -30,18 +32,18 @@ lookupArray =
 maxCode : Int
 maxCode =
     lookupList
-    |> List.map Tuple.first
-    |> List.map Char.toCode
-    |> List.maximum
-    |> Maybe.withDefault maxUnicode
+        |> List.map Tuple.first
+        |> List.map Char.toCode
+        |> List.maximum
+        |> Maybe.withDefault maxUnicode
 
 
 {-| The highest Unicode code point, see
-https://stackoverflow.com/a/27416004/6629874
+<https://stackoverflow.com/a/27416004/6629874>
 -}
 maxUnicode : Int
 maxUnicode =
-    0x10FFFF
+    0x0010FFFF
 
 
 {-| The lowest Unicode code point of all the diacritics.
@@ -49,10 +51,10 @@ maxUnicode =
 minCode : Int
 minCode =
     lookupList
-    |> List.map Tuple.first
-    |> List.map Char.toCode
-    |> List.minimum
-    |> Maybe.withDefault 0
+        |> List.map Tuple.first
+        |> List.map Char.toCode
+        |> List.minimum
+        |> Maybe.withDefault 0
 
 
 lookupList : List ( Char, String )
