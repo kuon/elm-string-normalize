@@ -38,8 +38,8 @@ suite =
 
         bench description str =
             Benchmark.compare description
-                "original"
-                (\_ -> removeDiacritics str)
+                "old"
+                (\_ -> oldRemoveDiacritics str)
                 "new"
                 (\_ -> Normalize.removeDiacritics str)
     in
@@ -49,10 +49,8 @@ suite =
         ]
 
 
-{-| This is the earlier algorithm, for comparison.
--}
-removeDiacritics : String -> String
-removeDiacritics str =
+oldRemoveDiacritics : String -> String
+oldRemoveDiacritics str =
     let
         replace c result =
             case Dict.get c Diacritics.lookupTable of
