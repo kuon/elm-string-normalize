@@ -61,7 +61,31 @@ removeDiacriticsTests =
                         removeDiacritics firstPass
                 in
                 Expect.equal firstPass secondPass
+        , fuzz
+            withDiacritics
+            "no regression with optimized version"
+          <|
+            \randomString ->
+                let
+                    old = oldRemoveDiacritics randomString
+                    new = removeDiacritics randomString
+                in
+                Expect.equal old new
         ]
+
+
+oldRemoveDiacritics : String -> String
+oldRemoveDiacritics str =
+    let
+        replace c result =
+            case Dict.get c lookupTable of
+                Just candidate ->
+                    result ++ candidate
+
+                Nothing ->
+                    result ++ String.fromChar c
+    in
+    String.foldl replace "" str
 
 
 unicode : Fuzz.Fuzzer String

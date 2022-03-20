@@ -1,11 +1,60 @@
-module String.Normalize.Diacritics exposing (lookupTable)
+module String.Normalize.Diacritics exposing (lookupArray, lookupTable, minCode)
 
+import Array exposing (Array)
 import Dict exposing (Dict, insert)
 
 
 lookupTable : Dict Char String
 lookupTable =
     Dict.fromList lookupList
+
+
+{-| The array indices are Unicode code points. The array contents are
+the strings to replace them with.
+-}
+lookupArray : Array String
+lookupArray =
+    List.range 0 maxCode
+        |> List.map
+            (\i ->
+                case Dict.get (Char.fromCode i) lookupTable of
+                    Nothing ->
+                        String.fromChar (Char.fromCode i)
+
+                    Just str ->
+                        str
+            )
+        |> Array.fromList
+
+
+{-| The highest Unicode code point of all the diacritics.
+-}
+maxCode : Int
+maxCode =
+    lookupList
+        |> List.map Tuple.first
+        |> List.map Char.toCode
+        |> List.maximum
+        |> Maybe.withDefault maxUnicode
+
+
+{-| The highest Unicode code point, see
+<https://stackoverflow.com/a/27416004/6629874>
+-}
+maxUnicode : Int
+maxUnicode =
+    0x0010FFFF
+
+
+{-| The lowest Unicode code point of all the diacritics.
+-}
+minCode : Int
+minCode =
+    lookupList
+        |> List.map Tuple.first
+        |> List.map Char.toCode
+        |> List.minimum
+        |> Maybe.withDefault 0
 
 
 lookupList : List ( Char, String )

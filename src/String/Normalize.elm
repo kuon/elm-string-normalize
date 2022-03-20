@@ -21,6 +21,7 @@ import Char
 import Dict
 import Set exposing (Set)
 import String.Normalize.Diacritics as Diacritics
+import Array
 
 
 {-| `removeDiacritics` removes diactritics, it will expand
@@ -40,12 +41,20 @@ removeDiacritics : String -> String
 removeDiacritics str =
     let
         replace c result =
-            case Dict.get c Diacritics.lookupTable of
-                Just candidate ->
-                    result ++ candidate
+            if Char.toCode c < Diacritics.minCode then
+                result ++ String.fromChar c
 
-                Nothing ->
-                    result ++ String.fromChar c
+            else
+                case
+                    Array.get
+                        (Char.toCode c)
+                        Diacritics.lookupArray
+                of
+                    Just candidate ->
+                        result ++ candidate
+
+                    Nothing ->
+                        result ++ String.fromChar c
     in
     String.foldl replace "" str
 
