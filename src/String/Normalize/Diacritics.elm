@@ -9,6 +9,9 @@ lookupTable =
     Dict.fromList lookupList
 
 
+{-| The array indices are Unicode code points. The array values
+contents are the strings to replace them with.
+-}
 lookupArray : Array String
 lookupArray =
     List.range 0 maxCode
@@ -22,6 +25,8 @@ lookupArray =
     |> Array.fromList
 
 
+{-| The highest Unicode code point of all the diacritics.
+-}
 maxCode : Int
 maxCode =
     lookupList
@@ -39,6 +44,8 @@ maxUnicode =
     0x10FFFF
 
 
+{-| The lowest Unicode code point of all the diacritics.
+-}
 minCode : Int
 minCode =
     lookupList
