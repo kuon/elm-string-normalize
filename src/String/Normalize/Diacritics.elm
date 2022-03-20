@@ -9,8 +9,8 @@ lookupTable =
     Dict.fromList lookupList
 
 
-{-| The array indices are Unicode code points. The array values
-contents are the strings to replace them with.
+{-| The array indices are Unicode code points. The array contents are
+the strings to replace them with.
 -}
 lookupArray : Array String
 lookupArray =
