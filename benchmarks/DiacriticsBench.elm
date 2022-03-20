@@ -26,9 +26,13 @@ main =
 suite : Benchmark
 suite =
     let
+        -- These characters have a higher Unicode code point than the
+        -- lowest diacritic code point.
         aboveMinString =
             "£££££££££££££££££££££££££££££££££££££"
 
+        -- These characters have lower Unicode code points than the
+        -- lowest diacritic code point.
         belowMinString =
             "asdfereqerqerpqoiweruqwerqwerpqoweAAA"
 
