@@ -49,6 +49,8 @@ suite =
         ]
 
 
+{-| This is the earlier algorithm, for comparison.
+-}
 removeDiacritics : String -> String
 removeDiacritics str =
     let
