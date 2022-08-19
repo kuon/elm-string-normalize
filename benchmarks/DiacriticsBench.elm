@@ -1,11 +1,10 @@
-module Main exposing (main)
+module DiacriticsBench exposing (main)
 
 {-| To run the benchmarks, first compile them with
 
-    elm make benchmarks / DiacriticsBench.elm --optimize
+    elm make DiacriticsBench.elm --optimize
 
-from the root directory of the project. Then open the generated
-index.html file in a browser.
+from this folder. Then open the generated index.html file in a browser.
 
 -}
 
