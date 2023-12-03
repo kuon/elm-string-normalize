@@ -19,6 +19,12 @@ String.Normalize.filename "Crazy / User Input:soɱeṳser.jpg"
 
 Will return:
 
-```elm
+```
 "crazy-user-input-someuser.jpg"
+```
+
+## Testing
+
+```shell
+make test
 ```
